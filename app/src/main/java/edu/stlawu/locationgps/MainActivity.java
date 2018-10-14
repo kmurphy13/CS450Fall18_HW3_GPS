@@ -9,32 +9,52 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+
+import android.view.View;
+import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class MainActivity
         extends AppCompatActivity
-        implements Observer {
+        implements Observer{
 
     private TextView tv_lat;
     private TextView tv_lon;
+    private TextView tv_currentLocation;
+    private TextView tv_startingLocation;
+    private ScrollView scrollView;
+    private Button controlButton;
 
     private Observable location;
     private LocationHandler handler = null;
     private final static int PERMISSION_REQUEST_CODE = 999;
 
     private boolean permissions_granted;
-    private final static String LOGTAG =
-            MainActivity.class.getSimpleName();
+    private final static String LOGTAG = MainActivity.class.getSimpleName();
+
+    private Location startLocation = new Location("");
+    private Location currentLocation = new Location("");
+
+    private Boolean justStarted = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.tv_lat = findViewById(R.id.tv_lat);
-        this.tv_lon = findViewById(R.id.tv_lon);
+        this.tv_startingLocation = findViewById(R.id.startingLocation);
+        this.tv_currentLocation = findViewById(R.id.currentLocation);
 
         if (handler == null) {
             this.handler = new LocationHandler(this);
@@ -52,6 +72,29 @@ public class MainActivity
                     PERMISSION_REQUEST_CODE
             );
         }
+
+        final TextView tv_distances = findViewById(R.id.distances);
+
+
+        controlButton = findViewById(R.id.control_button);
+        controlButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(controlButton.getText().equals("Start")){
+                    tv_startingLocation.setText("Starting Location: "+Double.toString(startLocation.getLatitude())+","+Double.toString(startLocation.getLongitude()));
+                    controlButton.setText("Checkpoint");
+                }
+                else if(controlButton.getText().equals("Checkpoint")){
+                    double distanceFromStart = startLocation.distanceTo(currentLocation);
+                    distanceFromStart = Math.round(distanceFromStart*100.0)/100.0;
+                    tv_distances.append("\t"+Double.toString(distanceFromStart)+"\n");
+
+
+                }
+            }
+
+        });
     }
 
     public boolean isPermissions_granted() {
@@ -83,18 +126,34 @@ public class MainActivity
     @Override
     public void update(Observable observable,
                        Object o) {
+        final ScrollView scrollview = ((ScrollView) findViewById(R.id.sv_distances));
         if (observable instanceof LocationHandler) {
             Location l = (Location) o;
-            final double lat = l.getLatitude();
-            final double lon = l.getLongitude();
+                final double lat = l.getLatitude();
+                final double lon = l.getLongitude();
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    tv_lat.setText(Double.toString(lat));
-                    tv_lon.setText(Double.toString(lon));
-                }
-            });
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(justStarted){
+                            startLocation.setLatitude(lat);
+                            startLocation.setLongitude(lon);
+                            controlButton.setEnabled(true);
+                            justStarted = false;
+                        }else{
+                            currentLocation.setLatitude(lat);
+                            currentLocation.setLongitude(lon);
+                            tv_currentLocation.setText("Current Location: "+Double.toString(currentLocation.getLatitude())+","+Double.toString(currentLocation.getLongitude()));
+                        }
+                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
+
+
         }
     }
+
+
+
+
 }

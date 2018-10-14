@@ -75,8 +75,10 @@ public class LocationHandler
 
     @Override
     public void onLocationChanged(Location location) {
-        setChanged();
-        notifyObservers(location);
+            setChanged();
+            notifyObservers(location);
+
+
     }
 
     @Override
