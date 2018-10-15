@@ -49,6 +49,9 @@ public class MainActivity
     private Boolean justStarted = true;
 
 
+    //Remi was here :)
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

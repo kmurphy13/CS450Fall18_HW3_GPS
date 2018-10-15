@@ -21,6 +21,8 @@ public class LocationHandler
     private LocationManager lm;
     private MainActivity act;
 
+    //Remi was here :)
+
     public LocationHandler(MainActivity act) {
         this.act = act;
         this.lm = (LocationManager) this.act.getSystemService(
