@@ -33,23 +33,22 @@ public class LocationHandler
                 == PackageManager.PERMISSION_GRANTED) {
             lm.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    5000,
+                    1000,
                     0,
                     this);
             lm.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
-                    5000,
+                    1000,
                     0,
                     this);
             lm.requestLocationUpdates(
                     LocationManager.PASSIVE_PROVIDER,
-                    5000,
+                    1000,
                     0,
                     this);
 
             // check for initial GPS coordinate
-            Location l =
-                lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location l = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if (l != null) {
                 setChanged();
@@ -64,8 +63,7 @@ public class LocationHandler
                 return;
             }
 
-            l = lm.getLastKnownLocation(
-                    LocationManager.PASSIVE_PROVIDER);
+            l = lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
             if (l != null) {
                 setChanged();
                 notifyObservers(l);
