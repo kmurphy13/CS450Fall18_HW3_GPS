@@ -115,13 +115,16 @@ public class MainActivity
 
                     DecimalFormat df = new DecimalFormat("00.00");
 
+                    velocityFromStart = distanceFromStart/ctr.count;
+                    velocityFromPrev = distanceFromPrev/(ctr.count-recentTime);
+
 
                     tv_distances.append("\t\t\t" + df.format(distanceFromStart) + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
                             + df.format(distanceFromPrev) + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"+
                             df.format(velocityFromStart) + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"+
                             df.format(velocityFromPrev)+"\n"+
                             "------------------------------------------------------------------------------------------------------------------------------------"+"\n");
-
+                    sv_distances.fullScroll(View.FOCUS_DOWN);
                     previousLocation.setLatitude(currentLocation.getLatitude());
                     previousLocation.setLongitude(currentLocation.getLongitude());
                     recentTime = ctr.count;
@@ -209,14 +212,9 @@ public class MainActivity
                         currentLocation.setLongitude(lon);
                         tv_currentLocation.setText("Current Location: " + Double.toString(currentLocation.getLatitude()) + "," + Double.toString(currentLocation.getLongitude()));
                     }
-
                 }
             });
-
-
         }
-
-
     }
 
     class Counter extends TimerTask {
