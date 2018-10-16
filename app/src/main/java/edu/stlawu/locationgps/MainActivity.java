@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.text.DecimalFormat;
@@ -110,6 +111,12 @@ public class MainActivity
                     t.scheduleAtFixedRate(ctr,0,1000);
 
 
+                    Toast toast = Toast.makeText(MainActivity.this,
+                            "Starting location recorded.",
+                            Toast.LENGTH_SHORT);
+
+                    toast.show();
+
                 } else if (controlButton.getText().equals("Checkpoint")) {
 
                     distanceFromStart = startLocation.distanceTo(currentLocation);
@@ -130,6 +137,12 @@ public class MainActivity
                     previousLocation.setLatitude(currentLocation.getLatitude());
                     previousLocation.setLongitude(currentLocation.getLongitude());
                     recentTime = ctr.count;
+
+                    Toast toast = Toast.makeText(MainActivity.this,
+                            "Checkpoint recorded.",
+                            Toast.LENGTH_SHORT);
+
+                    toast.show();
                 }
             }
 
