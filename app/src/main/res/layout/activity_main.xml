@@ -39,7 +39,7 @@
                 android:textColor="@color/white"
                 android:textSize="20dp" />
             <TextView
-                android:id="@+id/overallVelocity"
+                android:id="@+id/instantVelocity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"

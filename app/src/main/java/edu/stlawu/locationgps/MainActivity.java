@@ -35,11 +35,10 @@ public class MainActivity
         extends AppCompatActivity
         implements Observer {
 
-    private TextView tv_lat;
-    private TextView tv_lon;
+
     private TextView tv_currentLocation;
     private TextView tv_startingLocation;
-    private ScrollView scrollView;
+    private TextView tv_instantVelocity;
     private Button controlButton;
 
     private Timer t;
@@ -63,6 +62,7 @@ public class MainActivity
     private double recentTime = 0;
 
     private Boolean justStarted = true;
+    private Boolean timerStarted = false;
 
 
 
@@ -74,6 +74,7 @@ public class MainActivity
         setContentView(R.layout.activity_main);
         this.tv_startingLocation = findViewById(R.id.startingLocation);
         this.tv_currentLocation = findViewById(R.id.currentLocation);
+        this.tv_instantVelocity = findViewById(R.id.instantVelocity);
 
         if (handler == null) {
             this.handler = new LocationHandler(this);
@@ -109,6 +110,7 @@ public class MainActivity
                     t = new Timer();
                     ctr = new Counter();
                     t.scheduleAtFixedRate(ctr,0,1000);
+                    timerStarted = true;
 
 
                     Toast toast = Toast.makeText(MainActivity.this,
@@ -218,6 +220,9 @@ public class MainActivity
                 @Override
                 public void run() {
                     if (justStarted) {
+                        currentLocation.setLatitude(lat);
+                        currentLocation.setLongitude(lon);
+                        tv_currentLocation.setText("Current Location: " + Double.toString(currentLocation.getLatitude()) + "," + Double.toString(currentLocation.getLongitude()));
                         startLocation.setLatitude(lat);
                         startLocation.setLongitude(lon);
                         controlButton.setEnabled(true);
@@ -226,6 +231,13 @@ public class MainActivity
                         currentLocation.setLatitude(lat);
                         currentLocation.setLongitude(lon);
                         tv_currentLocation.setText("Current Location: " + Double.toString(currentLocation.getLatitude()) + "," + Double.toString(currentLocation.getLongitude()));
+                        if(timerStarted){
+                            double distance = startLocation.distanceTo(currentLocation);
+                            double instantVelocity = distance/ctr.count;
+                            DecimalFormat df = new DecimalFormat("00.00");
+                            tv_instantVelocity.setText("Current Velocity: "+df.format(instantVelocity));
+                        }
+
                     }
                 }
             });
@@ -235,6 +247,7 @@ public class MainActivity
     class Counter extends TimerTask {
         // Set the count to the count from the main activity
         private int count = 0;
+
 
         @Override
         public void run() {
