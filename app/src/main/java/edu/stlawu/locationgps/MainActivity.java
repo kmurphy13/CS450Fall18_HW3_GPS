@@ -2,12 +2,14 @@ package edu.stlawu.locationgps;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Location;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 
 
@@ -15,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import android.widget.ImageButton;
@@ -39,7 +42,9 @@ public class MainActivity
     private TextView tv_currentLocation;
     private TextView tv_startingLocation;
     private TextView tv_instantVelocity;
+    private TextView blankspace;
     private Button controlButton;
+    private LinearLayout ll_info;
 
     private Timer t;
     private Counter ctr;
@@ -73,6 +78,9 @@ public class MainActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+
+
         this.tv_startingLocation = findViewById(R.id.startingLocation);
         this.tv_currentLocation = findViewById(R.id.currentLocation);
         this.tv_instantVelocity = findViewById(R.id.instantVelocity);
@@ -117,7 +125,6 @@ public class MainActivity
                     Toast toast = Toast.makeText(MainActivity.this,
                             "Starting location recorded.",
                             Toast.LENGTH_SHORT);
-
                     toast.show();
 
                 } else if (controlButton.getText().equals("Checkpoint")) {
@@ -205,6 +212,30 @@ public class MainActivity
                 Log.i(LOGTAG, "Fine location permisssion not granted.");
             }
         }
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        this.ll_info = findViewById(R.id.ll_info);
+
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ll_info.setWeightSum(5);
+            TextView blankspace = new TextView(this);
+
+            ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+
+            blankspace.setLayoutParams(params);
+            ll_info.addView(blankspace);
+
+        } else {
+            ll_info.setWeightSum(4);
+            ll_info.removeView(blankspace);
+        }
+
 
     }
 
