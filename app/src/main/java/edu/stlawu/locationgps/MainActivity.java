@@ -71,6 +71,7 @@ public class MainActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         this.tv_startingLocation = findViewById(R.id.startingLocation);
         this.tv_currentLocation = findViewById(R.id.currentLocation);
